@@ -12,8 +12,11 @@ import Cookies from 'js-cookie'
 export const apiSlice = createApi({
     reducerPath: 'api',
     baseQuery: fetchBaseQuery({
-        baseUrl: process.env.API_BASE_URL,
+	baseUrl: process.env.NEXT_PUBLIC_API_BASE_URL,
         prepareHeaders: (headers, { getState }) => {
+        console.log('Base URL:', process.env.NEXT_PUBLIC_API_BASE_URL)  
+
+
             // Ambil token dari cookies  
             const token = Cookies.get('token')  || (getState() as RootState).auth.token
             
