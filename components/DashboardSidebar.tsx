@@ -19,7 +19,7 @@ export function DashboardSidebar() {
   const dispatch = useAppDispatch();
   const user = useAppSelector((state) => state.auth.user);
   const router = useRouter();
-
+  console.log('user', user);
   const handleLogout = () => {
     // Dispatch logout action
     dispatch(logout());
@@ -38,9 +38,9 @@ export function DashboardSidebar() {
     <Sidebar>
       <SidebarHeader>
         <h2 className="text-xl font-bold px-4 py-2">Bantuan Sosial</h2>
-        {user?.userId && (
+        {user?.username && (
           <div className="px-4 py-2 text-sm text-gray-500">
-            User ID: {user.userId.slice(0, 8)}...
+            Username: {user.username}
           </div>
         )}
       </SidebarHeader>
