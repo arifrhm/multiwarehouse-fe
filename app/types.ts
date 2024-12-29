@@ -51,9 +51,17 @@ export interface LoginRequest {
   password: string  
 }  
 
+export interface User {  
+  id: string  
+  username: string  
+  email: string  
+  role: string  
+}  
+
 export interface LoginResponse {  
   token: string  
-  userId: string  
+  refreshToken: string  
+  user: User  
 }  
 
 export interface LaporanRequest {  
@@ -75,18 +83,44 @@ export interface ExportLaporanParams {
   search?: string  
   format: 'csv' | 'excel' | 'pdf'  
 }
+export interface UserInfo {  
+  _id: string  
+  username: string  
+  email: string  
+}  
+export interface LaporanDetail {  
+  id: string  
+  nama_program: string  
+  wilayah: Wilayah  
+  jumlah_penerima: number  
+  tanggal_penyaluran: string  
+  bukti_penyaluran: string | null  
+  status: 'Pending' | 'Disetujui' | 'Ditolak'  
+  catatan_admin: string | null  
+  userId: string  
+  createdAt: string  
+  updatedAt: string  
+  user: UserInfo  
+}  
+
+export interface LaporanDetailResponse {  
+  message: string  
+  data: LaporanDetail  
+}  
 
 export interface LaporanAPI {  
-  _id: string  
+  id: string  
   nama_program: string  
+  wilayah: Wilayah  
   jumlah_penerima: number  
   tanggal_penyaluran: string  
   bukti_penyaluran: string  
   status: 'Pending' | 'Disetujui' | 'Ditolak'  
-  user: {  
-    _id: string  
-  }  
+  catatan_admin: string | null  
+  userId: string  
   createdAt: string  
+  updatedAt: string  
+  user: UserInfo  
 }  
 
 export interface PaginationInfo {  
@@ -107,4 +141,36 @@ export interface LaporanState {
   pagination: PaginationInfo  
   loading: boolean  
   error: string | null  
+}  
+
+export interface StatistikResponse {  
+  total_laporan: number  
+  penerima_per_program: Array<{  
+    _id: string  
+    total_penerima: number  
+  }>  
+  penyaluran_per_wilayah: Array<{  
+    _id: string  
+    total_penyaluran: number  
+  }>  
+} 
+
+
+export interface UpdateLaporanPayload {  
+  nama_program?: string  
+  wilayah?: {  
+    provinsi?: string  
+    kabupaten?: string  
+    kecamatan?: string  
+  }  
+  jumlah_penerima?: number  
+  tanggal_penyaluran?: string  
+  bukti_penyaluran?: File | null  
+  catatan_admin?: string | null  
+}  
+
+
+export interface UpdateLaporanResponse {  
+  message: string  
+  data: LaporanDetail  
 }  

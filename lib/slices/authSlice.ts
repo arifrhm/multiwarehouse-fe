@@ -1,30 +1,55 @@
 import { LoginResponse } from '@/app/types'
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'  
 
+// Definisikan tipe yang sesuai dengan struktur response  
+interface User {  
+  id: string  
+  username: string  
+  email: string  
+  role: string  
+}  
+
 interface AuthState {  
-  user: {  
-    userId?: string  
-  } | null  
   token: string | null  
+  refreshToken: string | null  
+  user: User | null  
 }  
 
 const initialState: AuthState = {  
-  user: null,  
-  token: null  
+  token: null,  
+  refreshToken: null,  
+  user: null  
 }  
 
 const authSlice = createSlice({  
   name: 'auth',  
   initialState,  
   reducers: {  
-    setCredentials: (state, action: PayloadAction<LoginResponse>) => {  
-      state.user = { userId: action.payload.userId }  
-      state.token = action.payload.token  
-    },  
+    setCredentials: (state, action: PayloadAction<{  
+      token: string  
+      refreshToken: string  
+      user: User  
+    }>) => {  
+      const { token, refreshToken, user } = action.payload  
+      
+      state.token = token  
+      state.refreshToken = refreshToken  
+      state.user = user  
+
+      // Optional: Simpan ke localStorage/sessionStorage jika diperlukan  
+      // localStorage.setItem('user', JSON.stringify(user))  
+    }, 
     logout: (state) => {  
-      state.user = null  
       state.token = null  
-    }  
+      state.refreshToken = null  
+      state.user = null  
+      
+      // Hapus cookies  
+      import('js-cookie').then(Cookies => {  
+        Cookies.default.remove('token')  
+        Cookies.default.remove('refreshToken')  
+      })  
+    } 
   }  
 })  
 

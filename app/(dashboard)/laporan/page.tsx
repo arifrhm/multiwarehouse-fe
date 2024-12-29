@@ -10,10 +10,18 @@ import {
 import { LaporanAPI } from '@/app/types'  
 import { showSuccessToast, showErrorToast } from '@/lib/utils/toast'  
 import { formatDate } from '@/lib/utils/date'  
+import { DetailLaporanModal } from '@/components/DetailLaporanModal'  
+import { EditReportModal } from '@/components/EditReportModal' // Tambahkan import  
 
 export default function LaporanPage() {  
   const [page, setPage] = useState(1)  
   const [status, setStatus] = useState<string | undefined>(undefined)  
+  
+  // State untuk detail laporan  
+  const [selectedLaporanId, setSelectedLaporanId] = useState<string | null>(null)  
+  
+  // State untuk edit laporan  
+  const [editLaporanId, setEditLaporanId] = useState<string | null>(null)  
 
   // Query untuk mendapatkan laporan  
   const {   
@@ -91,17 +99,31 @@ export default function LaporanPage() {
         </TableHeader>  
         <TableBody>  
           {laporanResponse?.data.map((laporan: LaporanAPI) => (  
-            <TableRow key={laporan._id}>  
+            <TableRow key={laporan.id}>  
               <TableCell>{laporan.nama_program}</TableCell>  
               <TableCell>{laporan.jumlah_penerima}</TableCell>  
               <TableCell>  
                 {formatDate(laporan.tanggal_penyaluran)}  
               </TableCell>  
               <TableCell>{laporan.status}</TableCell>  
-              <TableCell>  
+              <TableCell className="flex space-x-2">  
+                <Button   
+                  variant="outline"  
+                  onClick={() => setSelectedLaporanId(laporan.id)}  
+                >  
+                  Detail  
+                </Button>  
+                {laporan.status === 'Pending' && (  
+                  <Button   
+                    variant="secondary"  
+                    onClick={() => setEditLaporanId(laporan.id)}  
+                  >  
+                    Edit  
+                  </Button>  
+                )}  
                 <Button   
                   variant="destructive"   
-                  onClick={() => handleDelete(laporan._id)}  
+                  onClick={() => handleDelete(laporan.id)}  
                   disabled={isDeleting}  
                 >  
                   Hapus  
@@ -130,6 +152,22 @@ export default function LaporanPage() {
           Selanjutnya  
         </Button>  
       </div>  
+
+      {/* Modal Detail Laporan */}  
+      {selectedLaporanId && (  
+        <DetailLaporanModal   
+          laporanId={selectedLaporanId}  
+          onClose={() => setSelectedLaporanId(null)}  
+        />  
+      )}  
+
+      {/* Modal Edit Laporan */}  
+      {editLaporanId && (  
+        <EditReportModal  
+          laporanId={editLaporanId}  
+          onClose={() => setEditLaporanId(null)}  
+        />  
+      )}  
     </div>  
   )  
-}  
+}

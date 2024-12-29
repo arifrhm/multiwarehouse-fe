@@ -181,7 +181,7 @@ export function DistributionReportForm({ onSubmit }: { onSubmit: (data: FormData
           accept=".jpg,.png,.pdf" 
           {...register('proof', { 
             required: "Bukti penyaluran wajib diupload",
-            validate: (value) => {
+            validate: (value:any) => {
               if (value[0]) {
                 const fileSize = value[0].size / 1024 / 1024 // in MB
                 return fileSize <= 2 || "Ukuran file maksimal 2MB"
