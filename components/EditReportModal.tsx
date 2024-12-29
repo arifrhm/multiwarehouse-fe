@@ -24,7 +24,7 @@ import {
   useGetLaporanByIdQuery,   
   useUpdateLaporanMutation   
 } from '@/lib/slices/apiSlice'  
-import { LaporanDetail, LaporanDetailResponse } from '@/types'  
+import { LaporanDetail, LaporanDetailResponse } from '@/app/types'  
 import { toast } from 'sonner'  
 import { Loader2, FileImage, X } from 'lucide-react'  
 
@@ -54,8 +54,12 @@ export function EditReportModal({
 
   // Inisialisasi form saat data laporan tersedia  
   useEffect(() => {  
-    if (laporanResponse && 'status' in laporanResponse) {  
-      const laporan = (laporanResponse as LaporanDetailResponse)  
+    const isLaporanDetailResponse = (response: any): response is LaporanDetailResponse => {  
+      return response;  
+    }  
+  
+    if (isLaporanDetailResponse(laporanResponse)) {  
+      const laporan = laporanResponse.data  
       setFormData({  
         nama_program: laporan.nama_program,  
         jumlah_penerima: laporan.jumlah_penerima,  
@@ -64,7 +68,7 @@ export function EditReportModal({
         wilayah: laporan.wilayah  
       })  
     }  
-  }, [laporanResponse])  
+  }, [laporanResponse])
 
   // Fungsi format tanggal  
   const formatTanggal = (tanggal: string): string => {  
@@ -206,7 +210,8 @@ export function EditReportModal({
   // Cek apakah laporan dalam status Pending  
   const isEditDisabled = laporanResponse   
   && 'status' in laporanResponse   
-  && (laporanResponse as LaporanDetailResponse).status !== 'Pending'
+  ? laporanResponse.status !== 'Pending'  
+  : true
   return (  
     <Dialog open={true} onOpenChange={onClose}>  
       <DialogContent className="sm:max-w-[600px]">  
@@ -277,10 +282,10 @@ export function EditReportModal({
           {/* Bukti Penyaluran */}  
           <div>  
             <Label>Bukti Penyaluran</Label>  
-            {laporanResponse && 'data' in laporanResponse && laporanResponse.data.bukti_penyaluran && (  
+            {laporanResponse && 'data' in laporanResponse && laporanResponse.bukti_penyaluran && (  
               <div className="mb-2">  
                 <a   
-                  href={`${process.env.NEXT_PUBLIC_API_BASE_URL}${laporanResponse.data.bukti_penyaluran}`}   
+                  href={`${process.env.NEXT_PUBLIC_API_BASE_URL}${laporanResponse.bukti_penyaluran}`}   
                   target="_blank"   
                   rel="noopener noreferrer"  
                   className="text-blue-500 hover:underline flex items-center"  

@@ -19,7 +19,7 @@ import { Badge } from "@/components/ui/badge";
 import { toast } from "sonner";
 import { Loader2 } from "lucide-react";
 import Cookies from "js-cookie";
-import { useRouter } from "next/navigation"; // Perhatikan berbeda dengan sebelumnya  
+import { useRouter } from "next/navigation"; // Perhatikan berbeda dengan sebelumnya
 
 interface DetailLaporanModalProps {
   laporanId: string;
@@ -89,7 +89,10 @@ export function DetailLaporanModal({
 
     try {
       const token = Cookies.get("token");
-      const fullUrl = `${process.env.NEXT_PUBLIC_API_BASE_URL}${laporan.bukti_penyaluran}`;
+      // Gunakan optional chaining
+      const fullUrl = `${process.env.NEXT_PUBLIC_API_BASE_URL}${
+        laporan?.bukti_penyaluran ?? ""
+      }`;
 
       const response = await fetch(fullUrl, {
         method: "GET",
@@ -114,7 +117,7 @@ export function DetailLaporanModal({
 
       const blob = await response.blob();
       const fileName =
-        laporan.bukti_penyaluran.split("/").pop() || "bukti_penyaluran";
+        laporan?.bukti_penyaluran?.split("/").pop() || "bukti_penyaluran";
 
       const url = window.URL.createObjectURL(blob);
       const link = document.createElement("a");
@@ -168,20 +171,20 @@ export function DetailLaporanModal({
           <div className="grid grid-cols-2 gap-4">
             <div>
               <label className="block text-sm font-medium">Program</label>
-              <p>{laporan.nama_program}</p>
+              <p>{laporan?.nama_program}</p>
             </div>
             <div>
               <label className="block text-sm font-medium">Status</label>
               <Badge
                 variant={
-                  laporan.status === "Disetujui"
+                  laporan?.status === "Disetujui"
                     ? "default"
-                    : laporan.status === "Ditolak"
+                    : laporan?.status === "Ditolak"
                     ? "destructive"
                     : "outline"
                 }
               >
-                {laporan.status}
+                {laporan?.status}
               </Badge>
             </div>
           </div>
@@ -189,8 +192,8 @@ export function DetailLaporanModal({
           <div>
             <label className="block text-sm font-medium">Wilayah</label>
             <p>
-              {laporan.wilayah.kecamatan}, {laporan.wilayah.kabupaten},
-              {laporan.wilayah.provinsi}
+              {laporan?.wilayah.kecamatan}, {laporan?.wilayah.kabupaten},
+              {laporan?.wilayah.provinsi}
             </p>
           </div>
 
@@ -199,21 +202,23 @@ export function DetailLaporanModal({
               <label className="block text-sm font-medium">
                 Jumlah Penerima
               </label>
-              <p>{laporan.jumlah_penerima}</p>
+              <p>{laporan?.jumlah_penerima}</p>
             </div>
             <div>
               <label className="block text-sm font-medium">
                 Tanggal Penyaluran
               </label>
               <p>
-                {new Date(laporan.tanggal_penyaluran).toLocaleDateString(
-                  "id-ID",
-                  {
-                    day: "numeric",
-                    month: "long",
-                    year: "numeric",
-                  }
-                )}
+                {laporan?.tanggal_penyaluran
+                  ? new Date(laporan.tanggal_penyaluran).toLocaleDateString(
+                      "id-ID",
+                      {
+                        day: "numeric",
+                        month: "long",
+                        year: "numeric",
+                      }
+                    )
+                  : "Tanggal tidak tersedia"}
               </p>
             </div>
           </div>
@@ -225,14 +230,14 @@ export function DetailLaporanModal({
             <Button
               variant="outline"
               onClick={handleDownloadBukti}
-              disabled={!laporan.bukti_penyaluran || isDownloading}
+              disabled={!laporan?.bukti_penyaluran || isDownloading}
             >
               {isDownloading ? "Mengunduh..." : "Unduh Bukti"}
             </Button>
           </div>
 
           {/* Catatan Admin untuk Penolakan/Persetujuan */}
-          {laporan.status === "Pending" && (
+          {laporan?.status === "Pending" && (
             <div>
               <label className="block text-sm font-medium mb-2">
                 Alasan Penolakan (Wajib jika ditolak)
@@ -246,7 +251,7 @@ export function DetailLaporanModal({
           )}
 
           {/* Tombol Aksi */}
-          {laporan.status === "Pending" && (
+          {laporan?.status === "Pending" && (
             <div className="flex justify-end gap-2">
               <Button
                 variant="destructive"
