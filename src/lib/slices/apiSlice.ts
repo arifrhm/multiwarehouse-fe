@@ -17,17 +17,13 @@ export const apiSlice = createApi({
     reducerPath: 'api',
     baseQuery: fetchBaseQuery({
         baseUrl: process.env.NEXT_PUBLIC_API_BASE_URL + '/api',
-        prepareHeaders: (headers, { getState }) => {  
-            // Ambil token dari cookies terlebih dahulu  
+        prepareHeaders: (headers) => {  
             const token = Cookies.get('token')  
-
-            // Tambahkan token ke header  
             if (token) {  
                 headers.set('Authorization', `Bearer ${token}`)  
             }  
-
             return headers  
-        }  
+        }
     }),
     tagTypes: ['Auth', 'Laporan', 'Statistik'],
     endpoints: (builder) => ({
