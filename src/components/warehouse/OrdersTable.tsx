@@ -12,7 +12,7 @@ interface OrdersTableProps {
 export function OrdersTable({ orders }: OrdersTableProps) {
   return (
     <div className="overflow-x-auto">
-      <table className="min-w-full">
+      <table>
         <thead>
           <tr>
             <th className="px-4 py-2">Order ID</th>
