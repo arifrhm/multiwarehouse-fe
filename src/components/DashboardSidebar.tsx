@@ -8,7 +8,7 @@ import {
   SidebarMenuItem,
   SidebarMenuButton,
 } from "@/components/ui/sidebar";
-import { BarChart, FileText, LogOut, PlusCircle } from "lucide-react";
+import { BarChart, Package, Truck, Users, Clipboard, LogOut } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useAppDispatch, useAppSelector } from "@/lib/hooks";
@@ -19,25 +19,18 @@ export function DashboardSidebar() {
   const dispatch = useAppDispatch();
   const user = useAppSelector((state) => state.auth.user);
   const router = useRouter();
-  console.log('user', user);
+
   const handleLogout = () => {
-    // Dispatch logout action
     dispatch(logout());
-
-    // Hapus cookie token
     document.cookie = "token=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT";
-
-    // Tampilkan toast
     showSuccessToast("Anda berhasil logout");
-
-    // Redirect ke halaman login
     router.push("/login");
   };
 
   return (
     <Sidebar>
       <SidebarHeader>
-        <h2 className="text-xl font-bold px-4 py-2">Bantuan Sosial</h2>
+        <h2 className="text-xl font-bold px-4 py-2">Warehouse Dashboard</h2>
         {user?.username && (
           <div className="px-4 py-2 text-sm text-gray-500">
             Username: {user.username}
@@ -50,23 +43,39 @@ export function DashboardSidebar() {
             <SidebarMenuButton asChild>
               <Link href="/">
                 <BarChart className="mr-2 h-4 w-4" />
-                Statistik
+                Overview
               </Link>
             </SidebarMenuButton>
           </SidebarMenuItem>
           <SidebarMenuItem>
             <SidebarMenuButton asChild>
-              <Link href="/laporan/buat">
-                <PlusCircle className="mr-2 h-4 w-4" />
-                Buat Laporan
+              <Link href="/inventory">
+                <Package className="mr-2 h-4 w-4" />
+                Inventory
               </Link>
             </SidebarMenuButton>
           </SidebarMenuItem>
           <SidebarMenuItem>
             <SidebarMenuButton asChild>
-              <Link href="/laporan">
-                <FileText className="mr-2 h-4 w-4" />
-                Daftar Laporan
+              <Link href="/orders">
+                <Clipboard className="mr-2 h-4 w-4" />
+                Orders
+              </Link>
+            </SidebarMenuButton>
+          </SidebarMenuItem>
+          <SidebarMenuItem>
+            <SidebarMenuButton asChild>
+              <Link href="/shipments">
+                <Truck className="mr-2 h-4 w-4" />
+                Shipments
+              </Link>
+            </SidebarMenuButton>
+          </SidebarMenuItem>
+          <SidebarMenuItem>
+            <SidebarMenuButton asChild>
+              <Link href="/employees">
+                <Users className="mr-2 h-4 w-4" />
+                Employees
               </Link>
             </SidebarMenuButton>
           </SidebarMenuItem>

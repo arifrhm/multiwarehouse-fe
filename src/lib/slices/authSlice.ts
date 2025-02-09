@@ -1,4 +1,3 @@
-import { LoginResponse } from '@/app/types'
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'  
 
 // Definisikan tipe yang sesuai dengan struktur response  
